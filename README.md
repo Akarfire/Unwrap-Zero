@@ -5,6 +5,7 @@ A simple command prompt-based tool for explicit unwrapping of code templates. Co
 
 **Status: In Development**
 
+---
 ### Example
 
 *Following images are created using `Excalidraw` and are purely for illustrative purpose*.
