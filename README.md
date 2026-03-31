@@ -1,8 +1,6 @@
 
 # Unwrap Zero
 
----
-
 A simple command prompt-based tool for explicit unwrapping of code templates. Code templates can be in any format, they just need to contain unwrap configuration information before the code block.
 
 **Status: In Development**
