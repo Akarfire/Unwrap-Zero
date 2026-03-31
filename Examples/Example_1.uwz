@@ -1,0 +1,24 @@
+@UWZ 1.0
+@File ./Example_1.py
+
+@Replace FindThis | ReplaceWithThis
+
+@TableStart
+Param_1 | Param_2 | Param_3
+      1 |       2 |       3
+      0 |       1 |       2
+@TableEnd
+
+@CombinationStart
+Param_4 | 0 | 1 | 2
+Param_5 | 0 | 1
+@CombinationEnd
+
+@CodeStart
+
+def FindThis():
+    a = Param_4 * Param_5
+
+    return Param_1 + Param_2 + Param_3 + a
+
+@CodeEnd
