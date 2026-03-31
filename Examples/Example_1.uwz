@@ -1,7 +1,7 @@
 @UWZ 1.0
 @File ./Example_1.py
 
-@Replace FindThis | ReplaceWithThis
+@Replace FuncName | Func_1 | Func_2 | Func_3
 
 @TableStart
 Param_1 | Param_2 | Param_3
@@ -10,15 +10,14 @@ Param_1 | Param_2 | Param_3
 @TableEnd
 
 @CombinationStart
-Param_4 | 0 | 1 | 2
-Param_5 | 0 | 1
+Param_4 | 3 | 4
+Param_5 | 5 | 6
 @CombinationEnd
 
 @CodeStart
 
-def FindThis():
+def FuncName():
     a = Param_4 * Param_5
-
     return Param_1 + Param_2 + Param_3 + a
 
 @CodeEnd
