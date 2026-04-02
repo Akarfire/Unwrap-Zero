@@ -1,23 +1,19 @@
-@UWZ 1.0
-@File ./Example_1.py
+@UWZ 1.0 @
+@File `./Example_1.py` @
 
-@Replace FuncName | Func_1 | Func_2 | Func_3
+@Replace `FuncName` | `Func_1` | `Func_2` | `Func_3` @
+@Replace `Index` | % range(10) % @
 
-@TableStart
-Param_1 | Param_2 | Param_3
-      1 |       2 |       3
-      0 |       1 |       2
-@TableEnd
+@Table
+`Param_1` | `Param_2` | `Param_3`
+      `1` |       `2` |       `3`
+      `0` |       `1` |       `2`
+@
 
-@CombinationStart
-Param_4 | 3 | 4
-Param_5 | 5 | 6
-@CombinationEnd
+@Template
 
-@CodeStart
-
-def FuncName():
+def FuncName_Index():
     a = Param_4 * Param_5
     return Param_1 + Param_2 + Param_3 + a
 
-@CodeEnd
+@
