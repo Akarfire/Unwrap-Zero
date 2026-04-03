@@ -15,7 +15,7 @@
 		- [x]  String arguments
 		- [x] `Iterable` arguments
 - [x] Can unwrap a template with multiple operations
-- [ ] #Missing Can unwrap multiple templates in one file
+- [ ] #NotTested Can unwrap multiple templates in one file
 
 ---
 ### Command Usage
