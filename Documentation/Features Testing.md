@@ -9,11 +9,11 @@
 		- [x] One string argument
 		- [x] One `iterable` argument
 		- [x] Multiple arguments
-	- [ ] #Missing Table operation:
-		- [ ] #Missing No arguments -> error
-		- [ ] #Missing Invalid argument count in a test case -> error
-		- [ ] #Missing String arguments
-		- [ ] #Missing `Iterable` arguments
+	- [ ] Table operation:
+		- [ ] #NotTested No arguments -> error
+		- [ ] #NotTested Invalid argument count in a test case -> error
+		- [x]  String arguments
+		- [x] `Iterable` arguments
 - [x] Can unwrap a template with multiple operations
 - [ ] #Missing Can unwrap multiple templates in one file
 
