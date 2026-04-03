@@ -18,7 +18,7 @@ The presented unwrapping is achieved through the following sequence of transform
 ---
 ### Requirements
 
-* *Python* (Tested for python 3.14, will likely work on older versions).
+* *Python* (Tested for python 3.9, 3.10, 3.11, 3.12, 3.13, 3.14).
 
 ---
 ### Usage
