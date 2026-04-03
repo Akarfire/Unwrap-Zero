@@ -2,19 +2,19 @@
 
 ### Unwrap Zero Script
 
-- [ ] #Missing Can unwrap a template with NO operations
-- [ ] #Missing Can unwrap a template with ONE operation:
-	- [ ] #Missing Replace operation:
-		- [ ] #Missing No arguments -> error
-		- [ ] #Missing One string argument
-		- [ ] #Missing One `iterable` argument
-		- [ ] #Missing Multiple arguments
+- [x] Can unwrap a template with NO operations
+- [ ] Can unwrap a template with ONE operation:
+	- [ ] Replace operation:
+		- [ ] #NotTested No arguments -> error
+		- [x] One string argument
+		- [x] One `iterable` argument
+		- [x] Multiple arguments
 	- [ ] #Missing Table operation:
 		- [ ] #Missing No arguments -> error
 		- [ ] #Missing Invalid argument count in a test case -> error
 		- [ ] #Missing String arguments
 		- [ ] #Missing `Iterable` arguments
-- [ ] #Missing Can unwrap a template with multiple operations
+- [x] Can unwrap a template with multiple operations
 - [ ] #Missing Can unwrap multiple templates in one file
 
 ---
