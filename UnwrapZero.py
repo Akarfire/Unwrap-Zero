@@ -16,8 +16,18 @@ def log(message, type):
     
     if type == "ERROR":
         raise Exception(message)
-
-
+    
+    
+# Describes an operation that needs to be applied to a code template
+class Operation:
+    def __init__(self, arguments_ : list[any]):
+        self.arguments = arguments_
+    
+    # Override this method to add operation logic
+    def execute(self, code : str) -> list[str]:
+        return []
+    
+    
 # Contains a code template and all operations that need to be applied to it
 @dataclass
 class UnwrapTemplate:
@@ -27,15 +37,6 @@ class UnwrapTemplate:
     
 
 # OPERATIONS
-
-# Describes an operation that needs to be applied to a code template
-class Operation:
-    def __init__(self, arguments_ : list[any]):
-        self.arguments = arguments_
-    
-    # Override this method to add operation logic
-    def execute(self, code : str) -> list[str]:
-        return []
 
 # OPERATION : REPLACE
 
