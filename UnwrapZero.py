@@ -1,116 +1,104 @@
 from dataclasses import dataclass
 import re
 
+# UTILITY
 
-# Base class for all operations
-class Operation:
-    def __init__(self):
-        pass
+# Whter obj is iterable or not
+def is_iterable(obj):
+    try:
+        iter(obj)
+        return True
+    except TypeError:
+        return False
     
-    # Override this method to add operation logic
-    # Returns modifies line
-    def execute(self, line : str) -> str:
-        return
-
-
-# OPERATIONS
-
-# Replaces all instances of "A" with "B"
-class Replace(Operation):
-    def __init__(self, old_value_, new_value_):
-        self.old_value = old_value_
-        self.new_value = new_value_
-        
-    def execute(self, line : str) -> str:
-        return line.replace(self.old_value, self.new_value)
-        
-
-        
-
-# Data class that contains parameters and operations that will be applied to the code block
-@dataclass
-class Parameters:
-    out_file : str
-    operation_stack : list[Operation]
-
-# Contains parsing context
-@dataclass
-class Context:
-    code_block : bool = False
-
-
 
 # Logs some kind of message
 def log(message, type):
     print(type + " : ", message)
-    
-
-# Splits the line on '|', while ignoring '\|' and replacing them with normal '|'
-def split_on_pipes(line : str) -> list[str]:
-    
-    # Split on unescaped delimiters
-    pattern = r'(?<!\{}){}'.format('\\', '|')
-    parts = re.split(pattern, line)
-    
-    # Unescape any remaining escaped delimiters in each part
-    unescape_pattern = r'{}{}'.format('\\', '|')
-    return [re.sub(unescape_pattern, '|', part) for part in parts]
 
 
-# Analyzes a parameter line
-def parse_parameter_line(line : str, parameters : Parameters, context : Context):
+# Contains a code template and all operations that need to be applied to it
+@dataclass
+class UnwrapTemplate:
+    out_file : str
+    template_code : str
+    operations : list[Operation]
     
-    if line.startswith("@UWZ "): return
-    elif line.startswith("@File "): 
-        parameters.out_file = line.replace("@File ", "").replace('\n', '').strip()
+
+# OPERATIONS
+
+# Describes an operation that needs to be applied to a code template
+class Operation:
+    def __init__(self, arguments_ : list[any]):
+        self.arguments = arguments_
     
-    elif line.startswith("@CodeStart "):
-        context.code_block = True
+    # Override this method to add operation logic
+    def execute(self, code : str) -> list[str]:
+        return []
+
+# OPERATION : REPLACE
+
+# Replaces all instances of "A" with every version of "B"
+class Replace(Operation):
+    def __init__(self, arguments_):
+        super.__init__(arguments_)
         
-    elif line.startswith("@CodeEnd "):
-        context.code_block = True
-    
-    # Operations
-    elif line.startswith("@Replace "):
-        params = split_on_pipes(line.replace("@Replace ", ""))
+    def execute(self, code : str) -> list[str]:
         
-        if len(params) < 2:
-           log(f"Not enough parameters for @Replace, expected 2, {len(params)} provided: {params}", "Error")
-           
-        elif len(params) > 2:
-            log(f"Too many parameters for @Replace, expected 2, {len(params)} provided: {params}", "Error")
+        if (len(self.arguments) < 2):
+            log("Not enough arguments for a replace operation!", "ERROR")
+        
+        out_branches : list[str] = []
+        
+        find = self.arguments[0]
+        for rep in range(1, len(self.arguments)):
+            replacement = self.arguments[rep]
             
-        else:
-            parameters.operation_stack.append(Replace(params[0], params[1]))
-     
-     
-# Applies operations to the given line
-def apply_operations(line : str, operations : list[Operation]) -> str:
-    return line   
-
-
-# Analyzes lines (typically coming from an input file) and executes operations on code
-# Returns resulting file name and unwrapped file lines
-def process(lines : list[str]) -> tuple[str, list[str]]:
-    parameters = Parameters()
-    context = Context()
-    out_lines = []
+            if (is_iterable(replacement)):
+                for i in replacement:
+                    out_branches.append(code.replace(find, i))
+                    
+            else:
+                out_branches.append(code.replace(find, replacement))
     
-    for line in lines:
-        
-        if context.code_block:
-            out_lines.append(apply_operations(parameters.operation_stack))
-        
-        elif line.startswith("@"):
-            parse_parameter_line(line, parameters, context)
+
+# PARSING
+
+# Parses provided code to determine required operations and template
+def Parse(code : str) -> list[UnwrapTemplate]:
+    
+    # Current sate
+    # ...
+    
+    # Current token
+    current_token : str = ""
+       
+
+# UNWRAPPING
             
-    return parameters.out_file, out_lines
-            
+# Sequentially branches code and applies operations, described in templates 
+def Unwrap(templates : list[UnwrapTemplate]) -> list[list[str]]:
+    for temp in templates:
+        cache : list[list[str]] = []
+        cache.append([temp.template_code])
+        
+        for op in temp.operations:
+            cache.append([])
+            for code in cache[-2]:
+                for branch in op.execute(code):
+                    cache[-1].append(branch)
 
 
-def main():
+# PACKING
+
+# Takes unwrapped templates and packs them into a strings, that will later be written to files
+def Pack(unwrapped : list[list[str]], templates : list[UnwrapTemplate]) -> dict[str : str]:
     pass
 
+
+# Run script
+def main():
+    pass
 
 # Script entry point
 if (__name__ == "__main__"):
