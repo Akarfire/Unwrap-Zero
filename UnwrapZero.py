@@ -1,7 +1,5 @@
-from dataclasses import dataclass
-import re
-
 # UTILITY
+from dataclasses import dataclass
 
 # Whter obj is iterable or not
 def is_iterable(obj):
@@ -78,6 +76,8 @@ def Parse(code : str) -> list[UnwrapTemplate]:
             
 # Sequentially branches code and applies operations, described in templates 
 def Unwrap(templates : list[UnwrapTemplate]) -> list[list[str]]:
+    results : list[list[str]] = []
+    
     for temp in templates:
         cache : list[list[str]] = []
         cache.append([temp.template_code])
@@ -87,13 +87,32 @@ def Unwrap(templates : list[UnwrapTemplate]) -> list[list[str]]:
             for code in cache[-2]:
                 for branch in op.execute(code):
                     cache[-1].append(branch)
+                    
+        results.append(cache[-1])
+        
+    return results
 
 
 # PACKING
 
 # Takes unwrapped templates and packs them into a strings, that will later be written to files
 def Pack(unwrapped : list[list[str]], templates : list[UnwrapTemplate]) -> dict[str : str]:
-    pass
+    output : dict[str : str] = {}
+    
+    for i, temp in enumerate(templates):
+        output[temp.out_file] = unwrapped[i]
+        
+    return output
+
+
+# PROCESSING
+
+# Processes concatenated code and unwraps templates based on instructions found in it 
+def Process(code : str) -> dict[str : str]:
+    templates : list[UnwrapTemplate] = Parse(code)
+    unwrapped : list[list[str]] = Unwrap(templates)
+    return Pack(unwrapped, templates)
+    
 
 
 # Run script
