@@ -219,17 +219,18 @@ def Parse(code : str) -> list[UnwrapTemplate]:
             is_literal = not is_literal
             if not is_literal:
                 current_arguments.append(current_token)
-                current_token = ""
+            current_token = ""
                 
         elif c == '%' and not is_special and not is_literal:
             is_pyargument = not is_pyargument
             if not is_pyargument:
                 pyarg = eval(current_token)
                 current_arguments.append(pyarg)
-                current_token = ""
+            current_token = ""
         
         elif c == '\n' and command_name == "Table" and not (is_literal or is_pyargument or is_template) and not is_special:
             current_arguments.append('\n')
+            current_token = ""
         
         elif is_separator(c) and not (is_literal or is_pyargument or is_template) and not is_special:
             if is_command_name:
