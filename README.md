@@ -16,6 +16,11 @@ The presented unwrapping is achieved through the following sequence of transform
 ![](Documentation/Images/Example%20Process.png)
 
 ---
+### Requirements
+
+* *Python* (Tested for python 3.14, will likely work on older versions).
+
+---
 ### Usage
 
 *TO DO: Add user guide*
@@ -24,6 +29,9 @@ The presented unwrapping is achieved through the following sequence of transform
 ### Installation
 
 *TO DO: Add installation guide*
+
+*For developers:*
+[Development Install Guide](Documentation/Development%20Install%20Guide.md)
 
 ---
 ### Documentation
