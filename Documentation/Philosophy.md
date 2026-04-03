@@ -1,3 +1,5 @@
+
+# Philosophy
 ### 0. Zero dependencies
 Final runnable script must rely on no external dependency
 
