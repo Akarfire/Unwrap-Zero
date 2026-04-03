@@ -40,6 +40,8 @@ class Operation:
 # OPERATION : REPLACE
 
 # Replaces all instances of "A" with every version of "B"
+# First argument - what needs to be replaced
+# Further aguments (Second, Third, ...) - replacement versions
 class Replace(Operation):
     def __init__(self, arguments_):
         super().__init__(arguments_)
@@ -60,7 +62,74 @@ class Replace(Operation):
                     out_branches.append(code.replace(find, str(i)))
                     
             else:
-                out_branches.append(code.replace(find, replacement))
+                out_branches.append(code.replace(find, str(replacement)))
+                
+        return out_branches
+    
+    
+# OPERATION : TABLE
+
+# Unwraps code template for every parameter combination specified in the table
+# Argument rows are separated by a '\n' argument
+# First row - parameters
+# Further rows - parameter value combinations
+class Table(Operation):
+    def __init__(self, arguments_):
+        super().__init__(arguments_)
+        
+    def execute(self, code : str) -> list[str]:
+        
+        if (len(self.arguments) == 0):
+            log("Empty tables are not allowed!", "ERROR")
+            
+        # Determine parameter names
+        parameter_names : list[str] = []
+        for arg in self.arguments:
+            if arg == '\n': break
+            else: parameter_names.append(arg)
+        
+        if (len(self.arguments) - self.arguments.count('\n') == len(parameter_names)):
+            log("No parameter combinations are specified in @Table", "ERROR")
+        
+        if (len(self.arguments) % len(parameter_names) != 0):
+            log("Incomplete rows are not allowed in @Table", "ERROR")
+        
+        combinations : list[list[any]] = []
+        current_rows : list[list[any]] = []
+        for i in range(len(parameter_names) + 1, len(self.arguments)):
+            arg = self.arguments[i]
+            
+            if arg == '\n':
+                for row in current_rows:
+                    combinations.append(row)
+                current_rows = []
+                
+            elif (type(arg) != str and is_iterable(arg)):
+                current_rows_copy = current_rows.copy()
+                current_rows = []
+                for i in arg:
+                    for row in current_rows_copy:
+                        row_copy = row.copy()
+                        row_copy.append(str(i))
+                        current_rows.append(row_copy)
+            
+            else:
+                if len(current_rows) == 0:
+                    current_rows.append([])
+                
+                for row in current_rows:
+                    row.append(str(arg))
+        
+        out_branches : list[str] = []
+        
+        for comb in combinations:
+            code_cache = code
+            
+            for i, par in enumerate(parameter_names):
+                replacement = comb[i]
+                code_cache = code_cache.replace(par, replacement)
+                    
+            out_branches.append(code_cache)
                 
         return out_branches
     
@@ -136,8 +205,14 @@ def Parse(code : str) -> list[UnwrapTemplate]:
                     currentTepmplate.operations.append(Replace(current_arguments))
                     current_arguments = []
                     
+                elif command_name == "Table":
+                    currentTepmplate.operations.append(Table(current_arguments))
+                    current_arguments = []
+                    
                 else:
                     current_arguments = []
+                    
+                command_name = ""
                                     
                 
         elif c == '`' and not is_special and not is_pyargument:
@@ -152,6 +227,9 @@ def Parse(code : str) -> list[UnwrapTemplate]:
                 pyarg = eval(current_token)
                 current_arguments.append(pyarg)
                 current_token = ""
+        
+        elif c == '\n' and command_name == "Table" and not (is_literal or is_pyargument or is_template) and not is_special:
+            current_arguments.append('\n')
         
         elif is_separator(c) and not (is_literal or is_pyargument or is_template) and not is_special:
             if is_command_name:
