@@ -1,8 +1,8 @@
 @UWZ 1.0 @
 @File `./Example_1.py` @
 
-@Replace `FuncName` | `Func_1` | `Func_2` | `Func_3` @
-@Replace `Index` | % range(10) % @
+@Replace `FuncName` : `Func_1` , `Func_2` , `Func_3` @
+@Replace `Index` : % range(10) % @
 
 @Table
 `Param_1` | `Param_2` | `Param_3`
