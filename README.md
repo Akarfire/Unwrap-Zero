@@ -28,5 +28,6 @@ The presented unwrapping is achieved through the following sequence of transform
 ---
 ### Documentation
 
-*Code design diagram*
-![](Documentation/Images/CodeDesign.png)
+* [Philosophy](Documentation/Philosophy.md)
+* [Features Testing](Documentation/Features%20Testing.md)
+* [Code Documentation](Documentation/Code%20Documentation.md)
