@@ -372,3 +372,54 @@ def test_replace_and_table_arguments():
         print(expected)
         
     assert correct
+    
+    
+    
+    
+def test_uwz_syntax_in_python_comments():
+    
+    input = '''
+    #@UWZ 1.0 @
+    #@File `file.py`@
+    #@Replace : `FuncName` : `Func_1`, `Func_2` @
+    #@Table
+    #`Param_1` | `Param_2` | `Param_3`
+    #      `1` |       `2` |       `3`
+    #      `0` |       `1` |       `2`
+    #@
+    #@Template
+    def FuncName_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    #@
+    '''
+    
+    expected = {"file.py" : '''
+    def Func_1_Index():
+        a = Param_4 * Param_5
+        return 1 + 2 + 3 + a
+    #
+    def Func_1_Index():
+        a = Param_4 * Param_5
+        return 0 + 1 + 2 + a
+    #
+    def Func_2_Index():
+        a = Param_4 * Param_5
+        return 1 + 2 + 3 + a
+    #
+    def Func_2_Index():
+        a = Param_4 * Param_5
+        return 0 + 1 + 2 + a
+    #'''}
+    
+    result = UnwrapZero.Process(input)
+    
+    correct = result == expected
+    
+    if not correct:
+        print("Result: ")
+        print(result)
+        print("Expected: ")
+        print(expected)
+        
+    assert correct
