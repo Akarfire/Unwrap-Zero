@@ -23,12 +23,19 @@ The presented unwrapping is achieved through the following sequence of transform
 ---
 ### Usage
 
-*TO DO: Add user guide*
+*TO DO: Add syntax guide*
+
+After *Installation* you will be able to run Unwrap Zero using the following command:
+```Shell
+unwrapz ./Input/File.format
+```
 
 ---
 ### Installation
 
-*TO DO: Add installation guide*
+**Windows:**
+* Run `Setup.bat`
+* Done
 
 *For developers:*
 [Development Install Guide](Documentation/Development%20Install%20Guide.md)
