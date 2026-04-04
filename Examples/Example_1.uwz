@@ -11,9 +11,7 @@
 @
 
 @Template
-
 def FuncName_Index():
     a = Param_4 * Param_5
     return Param_1 + Param_2 + Param_3 + a
-
 @
