@@ -295,11 +295,30 @@ def Process(code : str) -> dict[str : str]:
     unwrapped : list[list[str]] = Unwrap(templates)
     return Pack(unwrapped, templates)
     
-
+    
+# SCRIPT
+import argparse
+import sys
 
 # Run script
 def main():
-    pass
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input", help="Input file or directory")
+    
+    args = parser.parse_args()
+    
+    path : str = args.input
+    code = ""
+    with open(path) as f:
+        for line in f.readlines():
+            code += line
+            
+    output = Process(code)
+    for file in output:
+        with open(file, 'w') as f:
+            f.write(output[file])
+    
 
 # Script entry point
 if (__name__ == "__main__"):
