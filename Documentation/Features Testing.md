@@ -20,10 +20,10 @@
 ---
 ### Command Usage
 
-* [ ] #Missing Setup script works on Windows
+* [x] Setup script works on Windows
 * [ ] #Missing Setup script works on Linux
-* [ ] #Missing Can call using a simple name on Windows
+* [x] Can call using a simple name on Windows
 * [ ] #Missing Can call using a simple name on Linux
-* [ ] #Missing Can specify a file as an input
+* [x] Can specify a file as an input
 * [ ] #Missing Can specify a directory as an input
 * [ ] #Missing Can specify custom output direction
