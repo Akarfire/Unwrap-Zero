@@ -170,10 +170,10 @@ def Parse(code : str) -> list[UnwrapTemplate]:
         if c == '\\': is_special = True
         
         if c == '@' and not is_special and not is_literal and not is_pyargument: 
-            
             is_command = not is_command
             if (is_command):
                 is_command_name = True
+                current_token = ""
                 
             elif is_template:
                 # print(command_name)
