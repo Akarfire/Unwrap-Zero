@@ -203,6 +203,10 @@ def Parse(code : str) -> list[UnwrapTemplate]:
                 if command_name == "UWZ": current_arguments = [] 
                 
                 elif command_name == "File":
+                    
+                    if (len(current_arguments) != 1):
+                        log("@File command must have 1 argument!", "ERROR")
+                    
                     current_template.out_file = current_arguments[0]
                     current_arguments = []
                     
@@ -288,6 +292,10 @@ def Pack(unwrapped : list[list[str]], templates : list[UnwrapTemplate]) -> dict[
     output : dict[str : str] = {}
     
     for i, temp in enumerate(templates):
+        
+        if (temp.out_file.count(' ') == len(temp.out_file)):
+            log("Empty file names are not supported!", "ERROR")
+        
         compilation = ""
         for s in unwrapped[i]:
             compilation += s
