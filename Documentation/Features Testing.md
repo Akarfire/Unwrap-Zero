@@ -30,3 +30,4 @@
 * [x] Can specify a directory as an input
 * [x] Recursive scan input directory option
 * [x] Can specify custom output directory
+* [x] Can specify file format for directory inputs
