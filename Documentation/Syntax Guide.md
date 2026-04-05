@@ -2,7 +2,7 @@
 
 ### General
 
-All `uwz` commands are specified in `@`-brackets: `@Command ... @`. Commands almost always have arguments, that are separated by any of the separator symbols and specified in the following manner:
+All `uwz` commands are specified in `@`-brackets: `@Command ... @`. Commands almost always have arguments, that are specified inside of backtick brackets and separated by any of the separator symbols:
 
 ```c++
 @Command `Argument` `Argument` | `Argument`, `Argument` @
@@ -22,8 +22,19 @@ Example:
 @File `OutputFileName.txt` @
 ```
 
+---
+
+### Iterable Python Arguments
+
+You can specify python-evaluated arguments using `% ... %` (instead of backtick brackets). If the specified argument is *Iterable*, this command will be applied with every element from that iterable in-place of this argument. Every element of the iterable is converted to a string. Nested iterables are not supported (inner iterables will be converted to strings). If an argument specified in `% ... %` is not iterable, it will be simple converted to a string.
+
+Example:
+```c++
+@Replace `Index` : % range(10) % @
+```
 
 ---
+
 ### Operations
 
 #### `@Replace 'FindName' : 'Replace_1', 'Replace_2', ...` `
@@ -52,15 +63,15 @@ Example:
 @
 ```
 
-
 ---
+
 ### Multiple Templates in One File
 
 You can, just as well, specify multiple code templates in one file. 
 
 ```c++
 @UWZ 1.0 @
-@File `Example_1_uwz_1_unwrap.py` @
+@File `Unwrap.py` @
 
 @Replace `FuncName` : `Func_1` , `Func_2` , `Func_3` @
 @Replace `Index` : % range(10) % @
@@ -79,3 +90,65 @@ def Temp_2_FuncName_Index():
     return Param_1 + Param_2 + Param_3 + a
 @
 ```
+
+This way both templates will have the same stack of operations applied to them.
+
+You can add additional operations before the second template and override it's the output file.
+
+```c++
+@UWZ 1.0 @
+@File `Unwrap.py` @
+
+@Replace `FuncName` : `Func_1` , `Func_2` , `Func_3` @
+@Replace `Index` : % range(10) % @
+
+// Template one
+@Template
+def Temp_1_FuncName_Index():
+    a = Param_4 * Param_5
+    return Param_1 + Param_2 + Param_3 + a
+@
+
+@File `AnotherUnwrap.py`@ // <----
+@Replace `a` : `b` , `c` @ // <---
+
+// Template_2
+@Template
+def Temp_2_FuncName_Index():
+    a = Param_4 * Param_5
+    return Param_1 + Param_2 + Param_3 + a
+@
+```
+
+This way, the first template will have 2 operations applied to it and will be written into `Unwrap.py`, while the second template will have all 3 operations applied and will be written into `AnotherUnwrap.py`.
+
+If you want to apply different sets of operations to templates, you just need to add a `@Reset@` command in between them. Note that this will also reset the file name.
+
+```c++
+@UWZ 1.0 @
+@File `Unwrap.py` @
+
+@Replace `FuncName` : `Func_1` , `Func_2` , `Func_3` @
+@Replace `Index` : % range(10) % @
+
+// Template one
+@Template
+def Temp_1_FuncName_Index():
+    a = Param_4 * Param_5
+    return Param_1 + Param_2 + Param_3 + a
+@
+
+@Reset@ // <-----
+
+@File `AnotherUnwrap.py`@
+@Replace `a` : `b` , `c` @
+
+// Template_2
+@Template
+def Temp_2_FuncName_Index():
+    a = Param_4 * Param_5
+    return Param_1 + Param_2 + Param_3 + a
+@
+```
+
+This way, the first template will have 2 operations applied to it and will be written into `Unwrap.py`, while the second template will have only 1 operation applied and will be written into `AnotherUnwrap.py`.
