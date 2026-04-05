@@ -42,7 +42,7 @@ class UnwrapTemplate:
 
 # Replaces all instances of "A" with every version of "B"
 # First argument - what needs to be replaced
-# Further aguments (Second, Third, ...) - replacement versions
+# Further arguments (Second, Third, ...) - replacement versions
 class Replace(Operation):
     def __init__(self, arguments_):
         super().__init__(arguments_)
@@ -79,7 +79,6 @@ class Table(Operation):
         super().__init__(arguments_)
         
     def execute(self, code : str) -> list[str]:
-        
         if (len(self.arguments) == 0):
             log("Empty tables are not allowed!", "ERROR")
             
@@ -181,6 +180,7 @@ def Parse(code : str) -> list[UnwrapTemplate]:
             if is_command:
                 is_command_name = True
                 current_token = ""
+                current_arguments = []
                 
             elif is_template:
                 current_template.template_code = current_token
@@ -226,24 +226,24 @@ def Parse(code : str) -> list[UnwrapTemplate]:
                 command_name = ""
                                     
                 
-        elif c == '`' and not is_special and not is_pyargument:
+        elif c == '`' and not is_special and not is_pyargument and is_command:
             is_literal = not is_literal
             if not is_literal:
                 current_arguments.append(current_token)
             current_token = ""
                 
-        elif c == '%' and not is_special and not is_literal:
+        elif c == '%' and not is_special and not is_literal  and is_command:
             is_pyargument = not is_pyargument
             if not is_pyargument:
                 pyarg = eval(current_token)
                 current_arguments.append(pyarg)
             current_token = ""
         
-        elif c == '\n' and command_name == "Table" and not (is_literal or is_pyargument or is_template) and not is_special:
+        elif c == '\n' and command_name == "Table" and not (is_literal or is_pyargument or is_template) and not is_special  and is_command:
             current_arguments.append('\n')
             current_token = ""
         
-        elif is_separator(c) and not (is_literal or is_pyargument or is_template) and not is_special:
+        elif is_separator(c) and not (is_literal or is_pyargument or is_template) and not is_special and is_command:
             if is_command_name:
                 is_command_name = False
                 command_name = current_token
@@ -292,7 +292,10 @@ def Pack(unwrapped : list[list[str]], templates : list[UnwrapTemplate]) -> dict[
         for s in unwrapped[i]:
             compilation += s
         
-        output[temp.out_file] = compilation
+        if temp.out_file not in output:
+            output[temp.out_file] = compilation
+        else:
+            output[temp.out_file] += compilation
         
     return output
 
@@ -336,12 +339,16 @@ def main():
     # Custom output directory option
     parser.add_argument("-o", "--output", help="Overrides output directory")
     
+    # File format specification argument
+    parser.add_argument("-f", "--format", help="Specifies what files need to be unwrapped in input directory")
+    
     # Recursive directory scan option
     parser.add_argument(
         '-r', '--recursive',
         action='store_true',
         help='Enables recursive scanning for directory inputs'
     )
+    
     
     args = parser.parse_args()
     
@@ -361,12 +368,12 @@ def main():
         
         if args.recursive:
             for file in path.rglob("*"):
-                if file.is_file():
+                if file.is_file() and (not args.format or file.suffix == args.format):
                     process_file(str(file), output_dir)
         
         else:
             for file in path.iterdir():
-                if file.is_file():
+                if file.is_file() and (not args.format or file.suffix == args.format):
                     process_file(str(file), output_dir)
             
     
