@@ -23,22 +23,78 @@ The presented unwrapping is achieved through the following sequence of transform
 ---
 ### Usage
 
-*TO DO: Add syntax guide*
+#### 1. Create a template file
+
+```c++
+@UWZ 1.0 @                          // Optional
+@File `Example_1_uwz_unwrap.py` @   // Specifies output file name
+
+// Replace operations replace every instance of the first argument (FuncName)
+// with the following arguments, creating separate branches for every option
+
+@Replace `FuncName` : `Func_1` , `Func_2` , `Func_3` @
+@Replace `Index` : % range(10) % @  
+
+// You can specify python arguments using %...%, if that argument is iterable,
+// separate branches will be created for every element
+
+// Table operation specifies parameter names (first line) and combinations, which
+// those parameters will be replaced by. A new branch is created for every
+// combination
+
+@Table
+`Param_1` | `Param_2` | `Param_3`
+      `1` |       `2` |       `3`
+      `0` |       `1` |       `2`
+@
+
+// Code template, which will have operations applies to it
+@Template
+def FuncName_Index():
+    a = Param_4 * Param_5
+    return Param_1 + Param_2 + Param_3 + a
+@
+
+@Reset@ // Optional, 
+// used to reset configuration for multiple templates in the same template file
+```
+
+For more details see [Syntax Guide](Documentation/Syntax%20Guide.md).
+
+#### 2. Run command on the template file
 
 After *Installation* you will be able to run Unwrap Zero using the following command:
 ```Shell
 unwrapz ./Input/File.format
 ```
 
+Rich command example:
+```Shell
+unwrapz ./Input/Directory --output ./Output --format .uwz --recursive
+```
+
+**Arguments:**
+1. *input* (mandatory) - relative or absolute to the file / directory with files that need to be unwrapped;
+2. *--output* or *-o* (optional) - overrides file output directory (this argument is appended to the beginning of the path, specified in `@File ... @`);
+3. *--format* or *-f* (optional) - specifies file formats that need to be processed in input directory;
+4. *--recursive* or *-r* (optional) - enables recursive file scanning for directory inputs (files will be collected from all subdirectories).
+
 ---
 ### Installation
 
 **Windows:**
 * Run `Setup.bat`
-* Done
 
-*For developers:*
-[Development Install Guide](Documentation/Development%20Install%20Guide.md)
+**Manual installation (this is done automatically by `Setup.bat`):**
+1. Create a `./Run` subdirectory;
+2. In `./Run` create a `unwrapz.bat` with the following contents:
+```batch
+@echo off
+python "Absolute:\Path\To\UnwrapZero.py" %*
+```
+3. Add `./Run` directory to user's `PATH`.
+
+**For Developers:** [Development Install Guide](Documentation/Development%20Install%20Guide.md)
 
 ---
 ### Documentation
