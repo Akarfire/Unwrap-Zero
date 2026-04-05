@@ -515,6 +515,69 @@ def test_uwz_syntax_in_python_comments():
     assert correct
     
     
+    
+def test_symbols_outside_of_commands():
+    
+    input = '''
+    @UWZ 1.0 @ // Optional
+    @File `file.py`@ // Specifies output file name
+    
+    // Replace commands replace every instance of the first argument (FuncName)
+    // with the following arguments, creating separate branches for every option
+    @Replace : `FuncName` : `Func_1`, `Func_2` @
+    // %...%, if that argument is iterable, separate branches will be created for 
+    // every element
+    
+    
+    // Table command specifies parameter names (first line) and combinations, which
+    // those parameters will be replaced by. A new branch is created for every
+    // combination
+    @Table
+    `Param_1` | `Param_2` | `Param_3`
+          `1` |       `2` |       `3`
+          `0` |       `1` |       `2`
+    @
+    
+    // Code template, which will have commands applies to it
+    @Template
+    def FuncName_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    @
+    '''
+    
+    expected = {"file.py" : '''
+    def Func_1_Index():
+        a = Param_4 * Param_5
+        return 1 + 2 + 3 + a
+    
+    def Func_1_Index():
+        a = Param_4 * Param_5
+        return 0 + 1 + 2 + a
+    
+    def Func_2_Index():
+        a = Param_4 * Param_5
+        return 1 + 2 + 3 + a
+    
+    def Func_2_Index():
+        a = Param_4 * Param_5
+        return 0 + 1 + 2 + a
+    '''}
+    
+    result = UnwrapZero.Process(input)
+    
+    correct = result == expected
+    
+    if not correct:
+        print("Result: ")
+        print(result)
+        print("Expected: ")
+        print(expected)
+        
+    assert correct
+    
+    
+    
 def test_multiple_templates_operation_reset():
     
     input = '''
@@ -574,6 +637,64 @@ def test_multiple_templates_operation_reset():
     assert correct
     
     
+def test_multiple_templates_operation_reset_to_one_file():
+    
+    input = '''
+    @UWZ 1.0 @
+    @File `file_1.py`@
+    @Replace : `FuncName` : `Func_1`, `Func_2` @
+    @Template
+    def Temp_1_FuncName_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    @
+    
+    @Reset@
+    @File `file_1.py`@
+    
+    @Table
+    `Param_1` | `Param_2` | `Param_3`
+          `1` |       `2` |       `3`
+          `0` |       `1` |       `2`
+    @
+    @Template
+    def Temp_2_FuncName_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    @
+    '''
+    
+    expected = {"file_1.py" : '''
+    def Temp_1_Func_1_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    
+    def Temp_1_Func_2_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    
+    def Temp_2_FuncName_Index():
+        a = Param_4 * Param_5
+        return 1 + 2 + 3 + a
+    
+    def Temp_2_FuncName_Index():
+        a = Param_4 * Param_5
+        return 0 + 1 + 2 + a
+    '''}
+    
+    result = UnwrapZero.Process(input)
+    
+    correct = result == expected
+    
+    if not correct:
+        print("Result: ")
+        print(result)
+        print("Expected: ")
+        print(expected)
+        
+    assert correct
+    
+    
 def test_multiple_templates_operation_expansion():
     
     input = '''
@@ -609,6 +730,69 @@ def test_multiple_templates_operation_expansion():
         return Param_1 + Param_2 + Param_3 + a
     ''',
     "file_2.py" : '''
+    def Func_1_Index():
+        a = Param_4 * Param_5
+        return 1 + 2 + 3 + a
+    
+    def Func_1_Index():
+        a = Param_4 * Param_5
+        return 0 + 1 + 2 + a
+    
+    def Func_2_Index():
+        a = Param_4 * Param_5
+        return 1 + 2 + 3 + a
+    
+    def Func_2_Index():
+        a = Param_4 * Param_5
+        return 0 + 1 + 2 + a
+    '''}
+    
+    result = UnwrapZero.Process(input)
+    
+    correct = result == expected
+    
+    if not correct:
+        print("Result: ")
+        print(result)
+        print("Expected: ")
+        print(expected)
+        
+    assert correct
+    
+    
+def test_multiple_templates_operation_expansion_to_one_file():
+    
+    input = '''
+    @UWZ 1.0 @
+    @File `file_1.py`@
+    @Replace : `FuncName` : `Func_1`, `Func_2` @
+    @Template
+    def FuncName_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    @
+    
+    @Table
+    `Param_1` | `Param_2` | `Param_3`
+          `1` |       `2` |       `3`
+          `0` |       `1` |       `2`
+    @
+    @Template
+    def FuncName_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    @
+    '''
+    
+    expected = {"file_1.py" : '''
+    def Func_1_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    
+    def Func_2_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    
     def Func_1_Index():
         a = Param_4 * Param_5
         return 1 + 2 + 3 + a
