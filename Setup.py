@@ -34,7 +34,6 @@ def setup_windows(script_path, command_name):
     paths = current_path.lower().split(";")
     if batch_directory.lower() not in paths:
         new_path = current_path + (";" if current_path else "") + batch_directory
-        print(new_path)
         winreg.SetValueEx(key, "PATH", 0, winreg.REG_EXPAND_SZ, new_path)
     winreg.CloseKey(key)
     
