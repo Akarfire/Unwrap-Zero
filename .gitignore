@@ -182,3 +182,4 @@ cython_debug/
 /.obsidian
 *.code-workspace
 /Run
+/Releases
