@@ -32,6 +32,53 @@ def test_no_operations_template():
     assert correct
     
     
+def test_error_no_file_command():
+    
+    input = '''
+    @UWZ 1.0 @
+    @Template
+    def FuncName_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    @
+    '''
+    
+    with pytest.raises(Exception):
+        UnwrapZero.Process(input)
+        
+    
+def test_error_empty_file_command():
+    
+    input = '''
+    @UWZ 1.0 @
+    @File@
+    @File @
+    @Template
+    def FuncName_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    @
+    '''
+    
+    with pytest.raises(Exception):
+        UnwrapZero.Process(input)
+        
+def test_error_two_arguments_in_file_command():
+    
+    input = '''
+    @UWZ 1.0 @
+    @File `File.py`, `File_2.py`@
+    @Template
+    def FuncName_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    @
+    '''
+
+    with pytest.raises(Exception):
+        UnwrapZero.Process(input)
+    
+    
 def test_replace_error_no_arguments():
     
     input = '''
