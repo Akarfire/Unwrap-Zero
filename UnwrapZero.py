@@ -308,7 +308,24 @@ def Process(code : str) -> dict[str : str]:
     
 # SCRIPT
 import argparse
-import sys
+import os
+from pathlib import Path
+
+# Processes a single file
+def process_file(file_path, output_dir = "./"):
+    code = ""
+    
+    with open(file_path) as f:
+        for line in f.readlines():
+            code += line
+    
+    output = Process(code)
+    for file in output:
+        output_path = os.path.join(output_dir, file)
+        Path(output_path).parent.mkdir(exist_ok=True)
+        
+        with open(output_path, 'w') as f:
+            f.write(output[file])
 
 # Run script
 def main():
@@ -316,18 +333,42 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("input", help="Input file or directory")
     
+    # Custom output directory option
+    parser.add_argument("-o", "--output", help="Overrides output directory")
+    
+    # Recursive directory scan option
+    parser.add_argument(
+        '-r', '--recursive',
+        action='store_true',
+        help='Enables recursive scanning for directory inputs'
+    )
+    
     args = parser.parse_args()
     
-    path : str = args.input
-    code = ""
-    with open(path) as f:
-        for line in f.readlines():
-            code += line
+    path_str : str = args.input
+    path = Path(path_str)
+    
+    output_dir = "./"
+    if args.output:
+        output_dir = args.output
+    
+    # Single file case
+    if path.is_file():
+        process_file(path_str, output_dir)
             
-    output = Process(code)
-    for file in output:
-        with open(file, 'w') as f:
-            f.write(output[file])
+    # Directory
+    elif path.is_dir():
+        
+        if args.recursive:
+            for file in path.rglob("*"):
+                if file.is_file():
+                    process_file(str(file), output_dir)
+        
+        else:
+            for file in path.iterdir():
+                if file.is_file():
+                    process_file(str(file), output_dir)
+            
     
 
 # Script entry point
