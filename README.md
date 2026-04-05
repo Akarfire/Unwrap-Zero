@@ -10,10 +10,11 @@ A simple command prompt-based tool for explicit unwrapping of code templates. Co
 
 *Following images are created using `Excalidraw` and do not represent the way the program LOOKS*.
 
-![](Documentation/Images/Example%20Result.png)
+![](Documentation/Images/Example.png)
 
 The presented unwrapping is achieved through the following sequence of transformations:
-![](Documentation/Images/Example%20Process.png)
+
+![](Documentation/Images/ExampleTransformation.png)
 
 ---
 ### Requirements
