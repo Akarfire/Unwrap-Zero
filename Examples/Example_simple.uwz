@@ -1,0 +1,15 @@
+@UWZ 1.0 @
+@File `ExampleUnwrap.py` @
+
+@Replace `FuncName` : `Func` , `cnuF` @
+
+@Table
+`ID` | `A` | `B`
+`1`  | `1` | `3`
+`2`  |`"unwrap"` | `"example"`
+@
+
+@Template
+def FuncName_ID():
+    return A + B
+@
