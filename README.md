@@ -84,16 +84,18 @@ unwrapz ./Input/Directory --output ./Output --format .uwz --recursive
 ### Installation
 
 **Windows:**
-* Run `Setup.bat`
+* Clone this repository or download source code (and unpack it);
+* Run `Setup.bat`.
 
 **Manual installation (this is done automatically by `Setup.bat`):**
-1. Create a `./Run` subdirectory;
-2. In `./Run` create a `unwrapz.bat` with the following contents:
+1. Clone this repository or download source code (and unpack it);
+2. Create a `./Run` subdirectory;
+3. In `./Run` create a `unwrapz.bat` with the following contents:
 ```batch
 @echo off
 python "Absolute:\Path\To\UnwrapZero.py" %*
 ```
-3. Add `./Run` directory to user's `PATH`.
+4. Add `./Run` directory to user's `PATH`.
 
 **For Developers:** [Development Install Guide](Documentation/Development%20Install%20Guide.md)
 
