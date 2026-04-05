@@ -1,17 +1,28 @@
-@UWZ 1.0 @
-@File `./Example_1_uwz_unwrap.py` @
+@UWZ 1.0 @                          // Optional
+@File `Example_1_uwz_unwrap.py` @   // Specifies output file name
 
+// Replace commands replace every instance of the first argument (FuncName)
+// with the following arguments, creating separate branches for every option
 @Replace `FuncName` : `Func_1` , `Func_2` , `Func_3` @
-@Replace `Index` : % range(10) % @
+@Replace `Index` : % range(10) % @  // You can specify python arguments using
+// %...%, if that argument is iterable, separate branches will be created for 
+// every element
 
+// Table command specifies parameter names (first line) and combinations, which
+// those parameters will be replaced by. A new branch is created for every
+// combination
 @Table
 `Param_1` | `Param_2` | `Param_3`
       `1` |       `2` |       `3`
       `0` |       `1` |       `2`
 @
 
+// Code template, which will have commands applies to it
 @Template
 def FuncName_Index():
     a = Param_4 * Param_5
     return Param_1 + Param_2 + Param_3 + a
 @
+
+@Reset@ // Optional, used to reset configuration for multiple templates in the
+// same template file

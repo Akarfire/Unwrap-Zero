@@ -1,5 +1,5 @@
 @UWZ 1.0 @
-@File `./Example_1_uwz_1_unwrap.py` @
+@File `Example_1_uwz_1_unwrap.py` @
 
 @Replace `FuncName` : `Func_1` , `Func_2` , `Func_3` @
 @Replace `Index` : % range(10) % @
