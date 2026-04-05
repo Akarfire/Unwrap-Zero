@@ -3,19 +3,21 @@
 ### Unwrap Zero Script
 
 - [x] Can unwrap a template with NO operations
-- [ ] Can unwrap a template with ONE operation:
-	- [ ] Replace operation:
-		- [ ] #NotTested No arguments -> error
-		- [x] One string argument
-		- [x] One `iterable` argument
-		- [x] Multiple arguments
-	- [ ] Table operation:
-		- [ ] #NotTested No arguments -> error
-		- [ ] #NotTested Invalid argument count in a test case -> error
+- [x] Can unwrap a template with ONE operation:
+	- [x] Replace operation:
+		- [x] No arguments -> error
+		- [x] No replacement values -> error
+		- [x] One string replacements
+		- [x] One `iterable` replacement
+		- [x] Multiple replacements
+	- [x] Table operation:
+		- [x] No arguments -> error
+		- [x] No combinations -> error
+		- [x] Invalid row length -> error
 		- [x]  String arguments
 		- [x] `Iterable` arguments
 - [x] Can unwrap a template with multiple operations
-- [ ] #NotTested Can unwrap multiple templates in one file
+- [x] Can unwrap multiple templates in one file
 
 ---
 ### Command Usage
@@ -25,5 +27,6 @@
 * [x] Can call using a simple name on Windows
 * [ ] #Missing Can call using a simple name on Linux
 * [x] Can specify a file as an input
-* [ ] #Missing Can specify a directory as an input
-* [ ] #Missing Can specify custom output direction
+* [x] Can specify a directory as an input
+* [x] Recursive scan input directory option
+* [x] Can specify custom output directory
