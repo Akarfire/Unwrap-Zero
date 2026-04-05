@@ -3,12 +3,12 @@
 
 A simple command prompt-based tool for explicit unwrapping of code templates. Code templates can be in any format, they just need to contain unwrap configuration information before the code block.
 
-**Status: In Development**
+**Status: Windows Release 1.0
 
 ---
 ### Example
 
-*Following images are created using `Excalidraw` and do not represent the way the program LOOKS*.
+*Following images are created using `Excalidraw` and do not represent the way the program LOOKS - this tool has no GUI*.
 
 ![](Documentation/Images/Example.png)
 
@@ -84,11 +84,11 @@ unwrapz ./Input/Directory --output ./Output --format .uwz --recursive
 ### Installation
 
 **Windows:**
-* Clone this repository or download source code (and unpack it);
+* Download the latest release and unpack it;
 * Run `Setup.bat`.
 
 **Manual installation (this is done automatically by `Setup.bat`):**
-1. Clone this repository or download source code (and unpack it);
+1. Download the latest release and unpack it;
 2. Create a `./Run` subdirectory;
 3. In `./Run` create a `unwrapz.bat` with the following contents:
 ```batch
