@@ -142,6 +142,7 @@ class Table(Operation):
     
 
 # PARSING
+import copy
 
 # If c is a separator sybmol
 def is_separator(c : str) -> bool:
@@ -153,7 +154,7 @@ def Parse(code : str) -> list[UnwrapTemplate]:
     
     result : list[UnwrapTemplate] = []
     
-    currentTepmplate = UnwrapTemplate()
+    current_template = UnwrapTemplate()
     
     # Current sate
     is_command : bool = False
@@ -182,13 +183,13 @@ def Parse(code : str) -> list[UnwrapTemplate]:
                 current_token = ""
                 
             elif is_template:
-                # print(command_name)
-                # print(current_token)
-                currentTepmplate.template_code = current_token
+                current_template.template_code = current_token
                 is_template = False
                 
                 # Appending result
-                result.append(currentTepmplate)
+                result.append(current_template)
+                
+                current_template = copy.deepcopy(current_template)
                 
                 current_token = ""
                 
@@ -202,21 +203,21 @@ def Parse(code : str) -> list[UnwrapTemplate]:
                 if command_name == "UWZ": current_arguments = [] 
                 
                 elif command_name == "File":
-                    currentTepmplate.out_file = current_arguments[0]
+                    current_template.out_file = current_arguments[0]
                     current_arguments = []
                     
                 elif command_name == "Reset":
-                    currentTepmplate = UnwrapTemplate()
+                    current_template = UnwrapTemplate()
                     current_arguments = []
                     
                 # OPERATION CREATION
                 # @Replace ... @ opertion
                 elif command_name == "Replace":
-                    currentTepmplate.operations.append(Replace(current_arguments))
+                    current_template.operations.append(Replace(current_arguments))
                     current_arguments = []
                     
                 elif command_name == "Table":
-                    currentTepmplate.operations.append(Table(current_arguments))
+                    current_template.operations.append(Table(current_arguments))
                     current_arguments = []
                     
                 else:
