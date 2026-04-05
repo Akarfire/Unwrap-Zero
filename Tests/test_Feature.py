@@ -1,4 +1,5 @@
 import UnwrapZero
+import pytest
 
 def test_no_operations_template():
     
@@ -29,6 +30,41 @@ def test_no_operations_template():
         print(expected)
         
     assert correct
+    
+    
+def test_replace_error_no_arguments():
+    
+    input = '''
+    @UWZ 1.0 @
+    @File `file.py`@
+    @Replace@
+    @Replace @
+    @Template
+    def FuncName_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    @
+    '''
+    
+    with pytest.raises(Exception):
+        UnwrapZero.Process(input)
+        
+        
+def test_replace_error_no_replacements():
+    
+    input = '''
+    @UWZ 1.0 @
+    @File `file.py`@
+    @Replace `FindMe`@
+    @Template
+    def FuncName_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    @
+    '''
+    
+    with pytest.raises(Exception):
+        UnwrapZero.Process(input)
     
     
 def test_replace_one_string_argument():
@@ -188,6 +224,61 @@ def test_multiple_replace_operations():
     assert correct
     
     
+def test_table_error_no_arguments():
+    
+    input = '''
+    @UWZ 1.0 @
+    @File `file.py`@
+    @Table @
+    @Table@
+    @Template
+    def FuncName_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    @
+    '''
+    
+    with pytest.raises(Exception):
+        UnwrapZero.Process(input)
+        
+        
+def test_table_error_no_combinations():
+    
+    input = '''
+    @UWZ 1.0 @
+    @File `file.py`@
+    @Table `Param_1`, `Param_2`@
+    @Template
+    def FuncName_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    @
+    '''
+    
+    with pytest.raises(Exception):
+        UnwrapZero.Process(input)
+        
+def test_table_error_incomplete_combination():
+    
+    input = '''
+    @UWZ 1.0 @
+    @File `file.py`@
+    @Table 
+    `Param_1`, `Param_2`
+    `Option_1`, `Options_2`,
+    `Option_3`
+    @
+    @Template
+    def FuncName_Index():
+        a = Param_4 * Param_5
+        return Param_1 + Param_2 + Param_3 + a
+    @
+    '''
+    
+    with pytest.raises(Exception):
+        UnwrapZero.Process(input)
+        
+    
 def test_table_string_arguments():
     
     input = '''
@@ -233,10 +324,10 @@ def test_table_string_and_one_iterable_arguments():
     input = '''
     @UWZ 1.0 @
     @File `file.py`@
-    @Table
+    @Table 
     `Param_1` | `Param_2` | `Param_3`
-          `1` |       `2` |  %["cool", "iterable"]%
-          `0` |       `1` |       `2`
+    `1` |       `2` |  %["cool", "iterable"]%
+    `0` |       `1` |       `2`
     @
     @Template
     def FuncName_Index():
