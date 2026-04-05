@@ -85,25 +85,31 @@ class Table(Operation):
             
         # Determine parameter names
         parameter_names : list[str] = []
-        for arg in self.arguments:
-            if arg == '\n': break
-            else: parameter_names.append(arg)
+        last_parameter_name_index = -1
+        for i, arg in enumerate(self.arguments):
+            if arg == '\n':
+                if len(parameter_names) > 0: 
+                    break
+            else: 
+                parameter_names.append(arg)
+                last_parameter_name_index = i
         
         if (len(self.arguments) - self.arguments.count('\n') == len(parameter_names)):
             log("No parameter combinations are specified in @Table", "ERROR")
         
-        if (len(self.arguments) % len(parameter_names) != 0):
+        if ((len(self.arguments) - self.arguments.count('\n')) % len(parameter_names) != 0):
             log("Incomplete rows are not allowed in @Table", "ERROR")
         
         combinations : list[list[any]] = []
         current_rows : list[list[any]] = []
-        for i in range(len(parameter_names) + 1, len(self.arguments)):
+        for i in range(last_parameter_name_index + 1, len(self.arguments)):
             arg = self.arguments[i]
             
             if arg == '\n':
-                for row in current_rows:
-                    combinations.append(row)
-                current_rows = []
+                if (len(current_rows) > 0):
+                    for row in current_rows:
+                        combinations.append(row)
+                    current_rows = []
                 
             elif (type(arg) != str and is_iterable(arg)):
                 current_rows_copy = current_rows.copy()
@@ -171,7 +177,7 @@ def Parse(code : str) -> list[UnwrapTemplate]:
         
         if c == '@' and not is_special and not is_literal and not is_pyargument: 
             is_command = not is_command
-            if (is_command):
+            if is_command:
                 is_command_name = True
                 current_token = ""
                 
@@ -187,6 +193,9 @@ def Parse(code : str) -> list[UnwrapTemplate]:
                 current_token = ""
                 
             else:
+                if is_command_name:
+                    command_name = current_token
+                
                 current_token = ""
                 # Command words resolving
                 
